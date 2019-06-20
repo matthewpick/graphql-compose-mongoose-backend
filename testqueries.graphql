@@ -7,6 +7,17 @@ query allUsers {
     }
 }
 
+query allUsersAndClubs {
+    userMany {
+        _id
+        name
+        clubs {  # Node.js makes this fun...
+            name
+            city
+        }
+    }
+}
+
 query allClubs {
     clubMany {
         name

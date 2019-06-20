@@ -1,8 +1,22 @@
 const { composeWithMongoose } = require( 'graphql-compose-mongoose/node8')
 
+// NOTE: We can't do this yet because ClubTC is not defined yet
+// const { ClubTC } = require('./club')
+
 const { User } = require('../model/user')
 
 const UserTC = composeWithMongoose(User)
+
+
+// TODO: Due to Circular dependency... ClubTC is not defined yet (so we have to require() it within the function call)
+
+UserTC.addRelation('clubs', {
+  resolver: () => require('./club').ClubTC.getResolver('findManyByMemberUserId'),
+  prepareArgs: {
+    userId: source => source._id
+  },
+  projection: { _id: true }
+})
 
 const UserQueryFields = {
   userById: UserTC.getResolver('findById'),

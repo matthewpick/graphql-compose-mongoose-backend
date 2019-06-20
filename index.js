@@ -1,5 +1,5 @@
+require('dotenv').config()  // Get MONGO_URI from .env file
 const { ApolloServer } = require('apollo-server')
-require('dotenv').config()
 
 const mongoose = require( 'mongoose')
 const schema = require('./src/schema')
