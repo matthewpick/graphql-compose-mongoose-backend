@@ -1,11 +1,12 @@
-const { UserTC } = require('./user')
 const { composeWithMongoose } = require( 'graphql-compose-mongoose/node8')
-const { Club } = require('../model/club')
+const club = require('../model/club')
+const user = require('./user')
 
-const ClubTC = composeWithMongoose(Club)
+
+const ClubTC = composeWithMongoose(club.Club)
 
 ClubTC.addRelation('members', {
-  resolver: () => UserTC.getResolver('findByIds'),
+  resolver: () => user.UserTC.getResolver('findByIds'),
   prepareArgs: {
     _ids: source => source.memberIds
   },
@@ -13,7 +14,7 @@ ClubTC.addRelation('members', {
 })
 
 ClubTC.addRelation('admins', {
-  resolver: () => UserTC.getResolver('findByIds'),
+  resolver: () => user.UserTC.getResolver('findByIds'),
   prepareArgs: {
     _ids: source => source.adminIds
   },
@@ -25,7 +26,7 @@ ClubTC.addResolver({
   type: [ClubTC],
   args: { userId: 'MongoID!' },
   resolve: async ({ source, args, context, info }) => {
-    return await Club.find({ memberIds: { $in: [args.userId] } })
+    return await club.Club.find({ memberIds: { $in: [args.userId] } })
   }
 })
 
@@ -34,7 +35,7 @@ ClubTC.addResolver({
   type: [ClubTC],
   args: { userId: 'MongoID!' },
   resolve: async ({ source, args, context, info }) => {
-    return await Club.find({ adminIds: { $in: [args.userId] } })
+    return await club.Club.find({ adminIds: { $in: [args.userId] } })
   }
 })
 
@@ -61,8 +62,6 @@ const ClubMutationFields = {
   clubRemoveMany: ClubTC.getResolver('removeMany'),
 }
 
-module.exports = {
-  ClubTC,
-  ClubQueryFields,
-  ClubMutationFields,
-}
+module.exports.ClubTC = ClubTC
+module.exports.ClubQueryFields = ClubQueryFields
+module.exports.ClubMutationFields = ClubMutationFields
