@@ -1,0 +1,50 @@
+# Write your query or mutation here
+
+query allUsers {
+    userMany {
+        _id
+        name
+    }
+}
+
+query allClubs {
+    clubMany {
+        name
+    }
+}
+
+query allClubMembers {
+    clubMany {
+        name
+        memberIds
+        adminIds
+        members {
+            _id
+            name
+            email
+        }
+    }
+}
+
+mutation createNewUser{
+    userCreateOne(record: {
+        name: "Juniper"
+        email: "juniper@test.com"
+    }) {
+        recordId
+    }
+}
+
+
+mutation createnewClub {
+    clubCreateOne(record: {
+        name: "New Club #2"
+        memberIds: [
+            "5c9440ebe536d609c3a627a4",
+            "5c853c6bfe49041f71806271"
+        ]
+    }) {
+        recordId
+    }
+}
+
